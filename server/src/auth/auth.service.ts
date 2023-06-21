@@ -97,12 +97,14 @@ export class AuthService {
         { sub: userId, email },
         {
           secret: 'at-secret',
+          expiresIn: '15m',
         },
       ),
       this.jwtService.signAsync(
         { sub: userId, email },
         {
           secret: 'rt-secret',
+          expiresIn: '7d',
         },
       ),
     ]);
