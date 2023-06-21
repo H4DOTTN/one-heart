@@ -26,6 +26,7 @@ export class AuthService {
     await this.updateRtHash(user.id, tokens.refresh_token);
     return tokens;
   }
+
   async signup(dto: RegisterDto): Promise<tokens> {
     const { email, password, name } = dto;
     const hash = await this.hashData(password);
@@ -40,11 +41,38 @@ export class AuthService {
     await this.updateRtHash(user.id, tokens.refresh_token);
     return tokens;
   }
-  logout() {
-    return 'Logout';
+  async logout(userId: string) {
+    await this.prisma.user.updateMany({
+      where: {
+        id: userId,
+        hashRT: {
+          not: null,
+        },
+      },
+      data: {
+        hashRT: null,
+      },
+    }); // <-- update user here
   }
-  refresh() {
-    return 'Refresh';
+
+  async refresh(userId: string, rt: string) {
+    console.log(userId, rt);
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    }); // <-- find user here
+    if (!user || !user.hashRT) {
+      throw new ForbiddenException('Invalid refresh token');
+    }
+    const isValid = await bcrypt.compare(rt, user.hashRT);
+    if (!isValid) {
+      throw new ForbiddenException('Invalid refresh token');
+    }
+    const tokens = await this.getTokens(user.id, user.email);
+    await this.updateRtHash(user.id, tokens.refresh_token);
+    console.log(tokens);
+    return tokens;
   }
 
   async updateRtHash(userId: string, rt: string) {
