@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  ForbiddenException,
   HttpCode,
   HttpStatus,
   Post,
@@ -24,14 +25,13 @@ export class AuthController {
   @Post('signup')
   @Public()
   @HttpCode(HttpStatus.CREATED)
-  signup(@Body() dto: RegisterDto): Promise<tokens> {
+  signup(@Body() dto: RegisterDto): Promise<tokens | ForbiddenException> {
     return this.authService.signup(dto);
   }
 
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   logout(@GetCurrentUser('sub') userId: string) {
-    console.log(userId);
     return this.authService.logout(userId);
   }
 

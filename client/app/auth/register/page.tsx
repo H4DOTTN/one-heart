@@ -5,7 +5,7 @@ import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 import { Command } from "@/components/ui/command"
-import { UserAuthForm } from "@/components/user-auth-form"
+import { SignUpForm } from "@/components/auth/sign-up-form"
 
 export const metadata: Metadata = {
   title: "Register",
@@ -29,13 +29,10 @@ export default function RegisterPage() {
           <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
             <div className="flex flex-col space-y-2 text-center">
               <h1 className="text-2xl font-semibold tracking-tight">
-                Register to your account
+                Create an account
               </h1>
-              <p className="text-sm text-muted-foreground">
-                Enter your email and password to continue
-              </p>
             </div>
-            <UserAuthForm />
+            <SignUpForm />
             <p className="px-8 text-center text-sm text-muted-foreground">
               By clicking continue, you agree to our{" "}
               <Link
